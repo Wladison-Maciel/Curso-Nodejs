@@ -1,31 +1,29 @@
 const express = require("express");
 const server = express();
 
-// http://localhost:3000/hello?nome=felipe&idade=17
-// QUery params = ?nome=felipe&idade=17 
 
-server.get("/hello", (req, res) => {
+server.use(express.json());
 
-    const { nome, idade } = req.query; // Fazendo a desconstrução dos parâmetros que eu quero (Parametros Opcionais)
+// Criando uma lista simples para construção da API de CRUD
+let customers = [
+    {id: 1, name: "Dev Samurai", site: "http://devsamurai.com.br"},
+    {id: 2, name: "Google", site: "http://google.com.br"},
+    {id: 3, name: "UOL", site: "http://uol.com.br"}
+];
 
-    return res.json({
-        title: `Olá ${nome} tudo bem?`,
-        idade: `Sua idade é: ${idade}`
-    });
+// Retornando todos os customers
+server.get("/customers", (req, res) => {
+    return res.json(customers)
+});
+
+server.get("/customers/:id", (req, res) => {
+    const id = parseInt(req.params.id); // Recebe o id passado na URL e transforma em INT
+    const customer = customers.find(item => item.id === id); // Procura o id correspondente ao id passado na URL
+    const status = customer ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
+    return res.status(status).json(customer) // Retorna o status e o customer achado
 });
 
 
-// http://localhost:3000/hello/:nome
-// http://localhost:3000/hello/felipe
 
-server.get("/hello/:nome", (req, res) => {
-
-    const nome = req.params.nome;
-
-
-    return res.json({
-        title: `Olá ${nome} tudo bem?`
-    });
-});
 
 server.listen(3000);
