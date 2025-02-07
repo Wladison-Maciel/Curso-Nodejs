@@ -52,6 +52,20 @@ server.put("/customers/:id", (req, res) =>{
     return res.status(status).json(customers[index]); // Retorna o status code e o customer selecionado
 });
 
+// Deletando Customer
+server.delete("/customers/:id", (req, res) => {
+    const id = parseInt(req.params.id); // Recebe o id passado na URL e transforma em INT
+    const index = customers.findIndex(item => item.id === id); /* Procurando index do Customer que tem o mesmo
+    id passado na URL
+    */
+    const status = index >= 0 ? 200 : 404; // status recebe um Boolean se index for maior ou igual a 0
+    if(index >=0){
+        customers.splice(index, 1);
+    }
+
+    return res.status(status).json();
+});
+
 
 
 
