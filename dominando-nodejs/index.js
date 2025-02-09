@@ -13,7 +13,9 @@ let customers = [
 
 // Retornando todos os customers
 server.get("/customers", (req, res) => {
-    return res.json(customers)
+    console.debug("GET :: /customers", JSON.stringify(customers)) /* Adicionando um Debug e tranformando o 
+    customer em formato JSON */
+    return res.json(customers) // Retornando todos os customers
 });
 
 // Retornando apenas um Customer
@@ -21,6 +23,8 @@ server.get("/customers/:id", (req, res) => {
     const id = parseInt(req.params.id); // Recebe o id passado na URL e transforma em INT
     const customer = customers.find(item => item.id === id); // Procura o id correspondente ao id passado na URL
     const status = customer ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
+    console.debug("GET :: /customers/:id", JSON.stringify(customer)) /* Adicionando um Debug e tranformando o 
+    customer em formato JSON */
     return res.status(status).json(customer) // Retorna o status e o customer achado
 });
 
@@ -32,6 +36,8 @@ server.post("/customers", (req, res) =>{
     */
     const newCustomer = {id, name, site} // Criando um objeto que é o novo customer
     customers.push(newCustomer) // Adicionando o customer no banco de dados (Array)
+    console.debug("POST :: /customers", JSON.stringify(newCustomer)) /* Adicionando um Debug e tranformando o 
+    customer em formato JSON */
     return res.status(201).json(newCustomer) // Adicionando no Array em formato JSON junto com seu Status Code
 });
 
@@ -48,6 +54,8 @@ server.put("/customers/:id", (req, res) =>{
         customers[index] = {id: parseInt(id), name , site}; /* O customer do index selecionado receberá as
         alterações de "name" e "site"
         */
+        console.debug("PUT :: /customers/:id", JSON.stringify(customers[index])) /* Adicionando um Debug e tranformando o 
+        customer em formato JSON */
     }
     return res.status(status).json(customers[index]); // Retorna o status code e o customer selecionado
 });
@@ -61,12 +69,9 @@ server.delete("/customers/:id", (req, res) => {
     const status = index >= 0 ? 200 : 404; // status recebe um Boolean se index for maior ou igual a 0
     if(index >=0){
         customers.splice(index, 1);
+        console.log("Customer deletado com sucesso")
     }
-
     return res.status(status).json();
 });
 
-
-
-
-server.listen(3000);
+server.listen(3000); // Ouvindo na porta 3000
