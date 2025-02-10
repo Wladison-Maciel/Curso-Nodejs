@@ -1,5 +1,5 @@
-const express = require("express"); // Importa a Biblioteca Express
-const routes = require("./routes"); // Importa o arquivo de rotas definido em "./routes"
+import express from "express"; // Importa a Biblioteca Express
+import routes from "./routes"; // Importa o arquivo de rotas definido em "./routes"
 
 // Define a classe App que será responsável por configurar o servidor
 class App{
@@ -18,4 +18,4 @@ class App{
     }
 }
 // Exporta uma instância da classe App, retornando apenas o servidor configurado
-module.exports = new App().server;
+export default new App().server;
