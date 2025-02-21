@@ -11,7 +11,7 @@ class CustomersController {
     }
     // Listagem de um Customer
     show(req, res) {
-        const id = parseInt(req.params.id); // Recebe o id passado na URL e transforma em INT
+        const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
         const customer = customers.find(item => item.id === id); // Procura o id correspondente ao id passado na URL
         const status = customer ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
         console.debug("GET :: /customers/:id", JSON.stringify(customer)) /* Adicionando um Debug e tranformando o 
@@ -33,7 +33,7 @@ class CustomersController {
     }
     // Atualização de um Customer
     update(req, res) {
-        const id = parseInt(req.params.id); // Recebe o id passado na URL e transforma em INT
+        const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
         const { name, site } = req.body; // Fazendo a requisição por meio do body em formato JSON
         const index = customers.findIndex(item => item.id === id); /* Procurando index do Customer que tem o mesmo
     id passado na URL
@@ -41,7 +41,7 @@ class CustomersController {
         const status = index >= 0 ? 200 : 404; // status recebe um Boolean se index for maior ou igual a 0
 
         if (index >= 0) {
-            customers[index] = { id: parseInt(id), name, site }; /* O customer do index selecionado receberá as
+            customers[index] = { id: parseInt(id, 10), name, site }; /* O customer do index selecionado receberá as
         alterações de "name" e "site"
         */
             console.debug("PUT :: /customers/:id", JSON.stringify(customers[index])) /* Adicionando um Debug e tranformando o 
@@ -52,7 +52,7 @@ class CustomersController {
     }
     // Deleta um Customer
     destroy(req, res) {
-        const id = parseInt(req.params.id); // Recebe o id passado na URL e transforma em INT
+        const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
         const index = customers.findIndex(item => item.id === id); /* Procurando index do Customer que tem o mesmo
     id passado na URL
     */
