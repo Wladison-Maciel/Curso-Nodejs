@@ -17,4 +17,4 @@ class Contact extends Model {
   }
 }
 
-export default Customer;
+export default Contact;
