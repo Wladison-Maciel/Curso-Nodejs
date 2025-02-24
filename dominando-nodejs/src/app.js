@@ -1,5 +1,6 @@
 import express from "express"; // Importa a Biblioteca Express
 import routes from "./routes"; // Importa o arquivo de rotas definido em "./routes"
+import "./database/index";
 
 // Define a classe App que será responsável por configurar o servidor
 class App{
