@@ -1,3 +1,5 @@
+import Customer from "../models/Customer";
+
 let customers = [
     { id: 1, name: "Dev Samurai", site: "http://devsamurai.com.br" },
     { id: 2, name: "Google", site: "http://google.com.br" },
@@ -6,15 +8,18 @@ let customers = [
 class CustomersController {
 
     // Listagem dos Customers
-    index(req, res) {
-        return res.json(customers) // Retornando todos os customers
+    async index(req, res) {
+        const data = await Customer.findAll({
+            limit: 1000,
+        });
+        return res.json(data) // Retornando todos os customers
     }
     // Listagem de um Customer
     show(req, res) {
         const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
         const customer = customers.find(item => item.id === id); // Procura o id correspondente ao id passado na URL
         const status = customer ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
-        console.debug("GET :: /customers/:id", JSON.stringify(customer)) /* Adicionando um Debug e tranformando o 
+        console.debug("GET :: /customers/:id", JSON.stringify(customer)) /* Adicionando um Debug e tranformando o
         customer em formato JSON */
         return res.status(status).json(customer) // Retorna o status e o customer achado
     }
@@ -26,7 +31,7 @@ class CustomersController {
     */
         const newCustomer = { id, name, site } // Criando um objeto que é o novo customer
         customers.push(newCustomer) // Adicionando o customer no banco de dados (Array)
-        console.debug("POST :: /customers", JSON.stringify(newCustomer)) /* Adicionando um Debug e tranformando o 
+        console.debug("POST :: /customers", JSON.stringify(newCustomer)) /* Adicionando um Debug e tranformando o
     customer em formato JSON */
         return res.status(201).json(newCustomer) // Adicionando no Array em formato JSON junto com seu Status Code
 
@@ -44,7 +49,7 @@ class CustomersController {
             customers[index] = { id: parseInt(id, 10), name, site }; /* O customer do index selecionado receberá as
         alterações de "name" e "site"
         */
-            console.debug("PUT :: /customers/:id", JSON.stringify(customers[index])) /* Adicionando um Debug e tranformando o 
+            console.debug("PUT :: /customers/:id", JSON.stringify(customers[index])) /* Adicionando um Debug e tranformando o
         customer em formato JSON */
         }
         return res.status(status).json(customers[index]); // Retorna o status code e o customer selecionado
