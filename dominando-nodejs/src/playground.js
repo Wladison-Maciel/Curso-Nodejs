@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import "./database"
 import Customer from "./app/models/Customer"
 
@@ -11,9 +12,17 @@ class Playground {
         //        });
 
 
-        const customers = await Customer.findOne({
+        const customers = await Customer.findAll({
             where:{
-                status: "ARCHIVED",
+                [Op.or]:{
+                    status: {
+                        [Op.in]: ["ARCHIVED"],
+                    },
+                    name: {
+                        [Op.iLike]: "google%",
+                    }
+                }
+
             },
         });
 
