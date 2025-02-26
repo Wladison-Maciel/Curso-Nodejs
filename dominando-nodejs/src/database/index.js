@@ -19,9 +19,7 @@ class Database {
 
     associate() {
         models.forEach(model => {
-            if (model.associate) {
-                model.associate(this.connection.models); // Passa os modelos inicializados
-            }
+            models.forEach(model => model.associate(this.connection,models))
         });
     }
 }
