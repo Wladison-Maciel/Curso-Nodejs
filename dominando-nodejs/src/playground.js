@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
-import "./database"
-import Customer from "./app/models/Customer"
+import "./database";
+import Customer from "./app/models/Customer";
+import Contact from "./app/models/Contact";
 
 class Playground {
     static async play() {
@@ -13,17 +14,14 @@ class Playground {
 
 
         const customers = await Customer.findAll({
-            where:{
-                [Op.or]:{
-                    status: {
-                        [Op.in]: ["ARCHIVED"],
-                    },
-                    name: {
-                        [Op.iLike]: "google%",
-                    }
-                }
-
+            include: [{
+                model: Contact,
+                where: {
+                    status: "ARCHIVED"
+                },
+                required: false,
             },
+        ],
         });
 
         console.log(JSON.stringify(customers, null, 2));
