@@ -5,6 +5,7 @@ class Contact extends Model {
         super.init({
             name: Sequelize.STRING,
             email: Sequelize.STRING,
+            status: Sequelize.ENUM("ACTIVE", "ARCHIVED"),
         },
         {
             sequelize,
