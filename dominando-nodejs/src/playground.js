@@ -22,6 +22,8 @@ class Playground {
                 required: false,
             },
         ],
+        limit: 2, // Limitando o Número de Elementos que irão aparacer
+        offset: 2 * 1 - 2, // limit * page - limit
         });
 
         console.log(JSON.stringify(customers, null, 2));
