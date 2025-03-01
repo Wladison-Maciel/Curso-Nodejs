@@ -12,8 +12,7 @@ class Playground {
         //            attributes: { exclude: ["status"] },
         //        });
 
-
-        const customers = await Customer.findAll({
+        const customers = await Customer.count({
             include: [{
                 model: Contact,
                 where: {
