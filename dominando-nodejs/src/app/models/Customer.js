@@ -8,6 +8,13 @@ class Customer extends Model {
             status: Sequelize.ENUM("ACTIVE", "ARCHIVED"),
         },
         {
+            scopes:{
+                active:{
+                    where:{
+                        status: "ACTIVE"
+                    }
+                },
+            },
             sequelize,
         }
     );
