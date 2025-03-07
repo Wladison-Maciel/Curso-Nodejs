@@ -1,18 +1,20 @@
-import Sequelize, { Model } from "sequelize";
+import Sequelize, { Model } from "sequelize"; // Importa o Sequelize e a classe Model
 
 class User extends Model {
-    static init (sequelize) {
-        super.init({
-            name: Sequelize.STRING,
-            email: Sequelize.STRING,
-            provider: Sequelize.BOOLEAN,
-            password_hash: Sequelize.STRING,
-        },
-        {
-            sequelize,
-        }
-    );
-  }
+    // Método para inicializar o modelo e definir os campos da tabela
+    static init(sequelize) {
+        super.init(
+            {
+                name: Sequelize.STRING, // Define o campo "name" como string
+                email: Sequelize.STRING, // Define o campo "email" como string
+                provider: Sequelize.BOOLEAN, // Define se o usuário é um prestador de serviço (true/false)
+                password_hash: Sequelize.STRING, // Armazena o hash da senha do usuário
+            },
+            {
+                sequelize, // Passa a conexão com o banco de dados
+            }
+        );
+    }
 }
 
-export default User;
+export default User; // Exporta o modelo para ser usado em outras partes do sistema

@@ -1,26 +1,31 @@
-import Sequelize, { Model } from "sequelize";
+import Sequelize, { Model } from "sequelize"; // Importa o Sequelize e a classe Model
 
 class Customer extends Model {
-    static init (sequelize) {
-        super.init({
-            name: Sequelize.STRING,
-            email: Sequelize.STRING,
-            status: Sequelize.ENUM("ACTIVE", "ARCHIVED"),
-        },
-        {
-            scopes:{
-                active:{
-                    where:{
-                        status: "ACTIVE"
-                    }
-                },
+    // Método para inicializar o modelo e definir os campos da tabela
+    static init(sequelize) {
+        super.init(
+            {
+                name: Sequelize.STRING, // Define o campo "name" como uma string
+                email: Sequelize.STRING, // Define o campo "email" como uma string
+                status: Sequelize.ENUM("ACTIVE", "ARCHIVED"), // Define o campo "status" com valores restritos
             },
-            sequelize,
-        }
-    );
+            {
+                scopes: {
+                    active: { // Escopo que permite buscar apenas clientes ativos
+                        where: {
+                            status: "ACTIVE",
+                        },
+                    },
+                },
+                sequelize, // Passa a conexão do banco de dados
+            }
+        );
+    }
+
+    // Método para definir os relacionamentos do modelo
+    static associate(models) {
+        this.hasMany(models.Contact); // Um Customer pode ter vários contatos (relação 1:N)
+    }
 }
-static associate(models){
-    this.hasMany(models.Contact);
-  }
-}
-export default Customer;
+
+export default Customer; // Exporta o modelo para ser usado em outras partes do sistema
