@@ -5,9 +5,17 @@ import Contact from "./app/models/Contact";
 
 class Playground {
     static async play() {
-        const customers = await Customer.scope("active").findAll({});
+        const customer = await Customer.create({
+            id: 4,
+            name: "Github",
+            email: "github@google.com",
+            status: "ACTIVE",
+        });
+        console.log(JSON.stringify(customer))
 
-        console.log(JSON.stringify(customers, null, 2));
+        const buscarCustomer = await Customer.findAll();
+        console.log(JSON.stringify(buscarCustomer, null, 2));
+
     }
 }
 
