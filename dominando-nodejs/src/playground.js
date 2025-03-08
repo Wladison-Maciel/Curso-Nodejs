@@ -5,15 +5,23 @@ import Contact from "./app/models/Contact";
 
 class Playground {
     static async play() {
-        const customer = await Customer.create({
-            id: 4,
-            name: "Github",
-            email: "github@google.com",
-            status: "ACTIVE",
-        });
-        console.log(JSON.stringify(customer))
+        // Maneira de como fazer Create
+        // const customer = await Customer.create({
+        //     id: 4,
+        //     name: "Github",
+        //     email: "github@google.com",
+        //     status: "ACTIVE",
+        // });
 
-        const buscarCustomer = await Customer.findAll();
+        // Maneira de como fazer update
+        // const customer = await Customer.findByPk(1);
+        // const newCustomer = customer.update({ status: "ARCHIVED"});
+        // customer.save();
+        // console.log(JSON.stringify(newCustomer))
+
+        const buscarCustomer = await Customer.findAll({
+            order:[["id", "ASC"]],
+        });
         console.log(JSON.stringify(buscarCustomer, null, 2));
 
     }
