@@ -9,7 +9,7 @@ class Playground {
         // const customer = await Customer.create({
         //     id: 4,
         //     name: "Github",
-        //     email: "github@google.com",
+        // email: "github@google.com",
         //     status: "ACTIVE",
         // });
 
@@ -19,8 +19,12 @@ class Playground {
         // customer.save();
         // console.log(JSON.stringify(newCustomer))
 
+        // Maneira de como fazer o Delete
+        // const customer = await Customer.findByPk(4);
+        // customer.destroy();
+
         const buscarCustomer = await Customer.findAll({
-            order:[["id", "ASC"]],
+            order: [["id", "ASC"]],
         });
         console.log(JSON.stringify(buscarCustomer, null, 2));
 
