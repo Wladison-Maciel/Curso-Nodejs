@@ -3,37 +3,33 @@ import { Op } from "sequelize";
 import { parseISO } from 'date-fns'
 import Contact from "../models/Contact"
 
-let customers = [
-    { id: 1, name: "Dev Samurai", site: "http://devsamurai.com.br" },
-    { id: 2, name: "Google", site: "http://google.com.br" },
-    { id: 3, name: "UOL", site: "http://uol.com.br" }
-];
 class CustomersController {
-
-    // Listagem dos Customers
     async index(req, res) {
+        // Extrai os parâmetros de consulta (query) da requisição
         const {
-            name,
-            email,
-            status,
-            createdBefore,
-            createdAfter,
-            updatedBefore,
-            updatedAfter,
-            sort } = req.query;
+            name,           // Nome do cliente
+            email,          // Email do cliente
+            status,         // Status do cliente (ex: active, archived)
+            createdBefore,  // Data limite de criação (antes desta data)
+            createdAfter,   // Data mínima de criação (após esta data)
+            updatedBefore,  // Data limite de atualização (antes desta data)
+            updatedAfter,   // Data mínima de atualização (após esta data)
+            sort            // Ordenação dos resultados
+        } = req.query;
 
-        const page = req.query.page || 1;
-        const limit = req.params.limit || 25;
+        // Define a página atual e o limite de itens por página
+        const page = req.query.page || 1; // Se não for passado, assume 1
+        const limit = req.params.limit || 25; // Se não for passado, assume 25
 
-        let where = {};
+        let where = {}; // Objeto onde serão armazenadas as condições da consulta
+        let order = []; // Array para armazenar critérios de ordenação
 
-        let order = [];
-
+        // Filtros opcionais
         if (name) {
             where = {
                 ...where,
                 name: {
-                    [Op.iLike]: name,
+                    [Op.iLike]: name, // Filtra nomes semelhantes (case insensitive, útil para PostgreSQL)
                 }
             }
         }
@@ -42,24 +38,26 @@ class CustomersController {
             where = {
                 ...where,
                 email: {
-                    [Op.iLike]: email,
-                }
-            }
-        }
-        if (status) {
-            where = {
-                ...where,
-                status: {
-                    [Op.in]: status.split(",").map(item => item.toUpperCase()),
+                    [Op.iLike]: email, // Filtra emails semelhantes (case insensitive)
                 }
             }
         }
 
+        if (status) {
+            where = {
+                ...where,
+                status: {
+                    [Op.in]: status.split(",").map(item => item.toUpperCase()), // Transforma a string em um array e converte para maiúsculas
+                }
+            }
+        }
+
+        // Filtros por data de criação
         if (createdBefore) {
             where = {
                 ...where,
                 createdAt: {
-                    [Op.gte]: parseISO(createdBefore),
+                    [Op.gte]: parseISO(createdBefore), // Filtra registros criados antes da data especificada
                 }
             }
         }
@@ -68,16 +66,17 @@ class CustomersController {
             where = {
                 ...where,
                 createdAt: {
-                    [Op.lte]: parseISO(createdAfter),
+                    [Op.lte]: parseISO(createdAfter), // Filtra registros criados depois da data especificada
                 }
             }
         }
 
+        // Filtros por data de atualização
         if (updatedBefore) {
             where = {
                 ...where,
                 updatedAt: {
-                    [Op.gte]: parseISO(updatedBefore),
+                    [Op.gte]: parseISO(updatedBefore), // Filtra registros atualizados antes da data especificada
                 }
             }
         }
@@ -86,29 +85,33 @@ class CustomersController {
             where = {
                 ...where,
                 updatedAt: {
-                    [Op.lte]: parseISO(updatedAfter),
+                    [Op.lte]: parseISO(updatedAfter), // Filtra registros atualizados depois da data especificada
                 }
             }
         }
 
+        // Ordenação dos resultados (exemplo: "name:asc,email:desc")
         if (sort) {
-            order = sort.split(",").map(item => item.split(":"));
+            order = sort.split(",").map(item => item.split(":")); // Transforma a string de ordenação em um array
         }
 
+        // Busca os registros no banco de dados com base nos filtros e ordenação
         const data = await Customer.findAll({
-            where,
+            where, // Aplica os filtros
             include: [
                 {
-                    model: Contact,
-                    attributes: ["id", "status"],
+                    model: Contact, // Faz um relacionamento com a tabela de Contatos
+                    attributes: ["id", "status"], // Seleciona apenas os campos "id" e "status" dos contatos
                 }
             ],
-            order,
-            limit,
-            offset: limit * page - limit,
+            order, // Aplica a ordenação definida
+            limit, // Define o limite de registros por página
+            offset: limit * page - limit, // Calcula o deslocamento para a paginação
         });
-        return res.json(data) // Retornando todos os customers
+
+        return res.json(data); // Retorna os resultados da consulta como JSON
     }
+
     // Listagem de um Customer
     show(req, res) {
         const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
