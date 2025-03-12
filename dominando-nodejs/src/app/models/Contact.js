@@ -11,6 +11,10 @@ class Contact extends Model {
             },
             {
                 sequelize, // Passa a conexão do banco de dados
+                name:{
+                    singular: "contact",
+                    plural: "contacts",
+                },
             }
         );
     }

@@ -12,6 +12,10 @@ class User extends Model {
             },
             {
                 sequelize, // Passa a conexão com o banco de dados
+                name:{
+                    singular: "user",
+                    plural: "users",
+                },
             }
         );
     }
