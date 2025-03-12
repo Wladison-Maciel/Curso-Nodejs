@@ -113,13 +113,13 @@ class CustomersController {
     }
 
     // Listagem de um Customer
-    show(req, res) {
-        const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
-        const customer = customers.find(item => item.id === id); // Procura o id correspondente ao id passado na URL
-        const status = customer ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
-        console.debug("GET :: /customers/:id", JSON.stringify(customer)) /* Adicionando um Debug e tranformando o
+    async show(req, res) {
+        const id = parseInt(req.params.id, 10); // Recebendo id passado na URL
+        const data = await Customer.findByPk(id); // Procurando o id correspondente no Banco de Dados
+        const status = data ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
+        console.debug("GET :: /customers/:id", JSON.stringify(data)) /* Adicionando um Debug e tranformando o
         customer em formato JSON */
-        return res.status(status).json(customer) // Retorna o status e o customer achado
+        return res.status(status).json(data) // Retorna o status e o customer achado
     }
     // Cria um novo Customer
     create(req, res) {
