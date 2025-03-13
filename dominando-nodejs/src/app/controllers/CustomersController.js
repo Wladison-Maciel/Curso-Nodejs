@@ -108,22 +108,21 @@ class CustomersController {
             limit, // Define o limite de registros por página
             offset: limit * page - limit, // Calcula o deslocamento para a paginação
         });
-
-        return res.json(data); // Retorna os resultados da consulta como JSON
+        return res.status(200).json(data); // Retorna os resultados da consulta como JSON
     }
 
     // Listagem de um Customer
     async show(req, res) {
         const id = parseInt(req.params.id, 10); // Recebendo id passado na URL a transformando em INT
         const data = await Customer.findOne({ // Procurando somente um customer
-            include:[ // Adicionando seus Contatos para visualização
+            include: [ // Adicionando seus Contatos para visualização
                 {
                     model: Contact, // Adicionando Model
-                    attributes: ["id","status"], // Mostrando somente estes atributos
+                    attributes: ["id", "status"], // Mostrando somente estes atributos
                 }
             ],
             where: { // Fazendo a busca por meio de Operadores
-                id:{
+                id: {
                     [Op.eq]: id // Verificando se o id corresponde ao da URL
                 },
             },
@@ -134,16 +133,18 @@ class CustomersController {
         return res.status(status).json(data) // Retorna o status e o customer achado
     }
     // Cria um novo Customer
-    create(req, res) {
-        const { name, site } = req.body; // Fazendo a requisição por meio do body em formato JSON
-        const id = customers[customers.length - 1].id + 1; /* Pegando o tamanho da lista e subtraindo 1, com isso
-    pegaremos o valor do ID do índice 2, que é igual a 3, agora acrescentamos +1, ficando assim 4.
-    */
-        const newCustomer = { id, name, site } // Criando um objeto que é o novo customer
-        customers.push(newCustomer) // Adicionando o customer no banco de dados (Array)
-        console.debug("POST :: /customers", JSON.stringify(newCustomer)) /* Adicionando um Debug e tranformando o
-    customer em formato JSON */
-        return res.status(201).json(newCustomer) // Adicionando no Array em formato JSON junto com seu Status Code
+    // Resolver problema do create, não está aceitando ACTIVE
+    async create(req, res) {
+        const { id, name, email, status } = req.body; // Fazendo a requisição por meio do body em formato JSON
+        const data = await Customer.create({
+            id: id,
+            name: name,
+            email: email,
+            status: status
+        });
+        console.debug("POST :: /customers", JSON.stringify(data)) /* Adicionando um Debug e tranformando o
+        customer em formato JSON */
+        return res.status(201).json(data)
 
     }
     // Atualização de um Customer
