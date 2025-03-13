@@ -170,6 +170,9 @@ class CustomersController {
     async destroy(req, res) {
         const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
         const data = await Customer.findByPk(id); // Buscando id passado na URL
+        if (!data) {
+            return res.status(404).json({ error: "Cliente não encontrado" }); // Retornando caso não seja encontrado
+        }
         await data.destroy(); // Deletando customer selecionado
         res.status(200).json({ message: "Customer deletado com sucesso!" }) // Respondendo a requisão se concluida
         console.debug("DELETE :: /customers/:id", "Customer deletado com sucesso!"); // Console de debug
