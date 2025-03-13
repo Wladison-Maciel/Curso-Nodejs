@@ -17,11 +17,12 @@ class Customer extends Model {
                         },
                     },
                 },
-                hooks:{ // Criando um Hook (Gancho)
-                    beforeValidate: (customer, options) => { // Antes da validação o status será ARCHIVED
-                        customer.status = "ARCHIVED"
-                    },
-                },
+                // Desabilitando Hook temporariamente para Debug
+                // hooks:{ // Criando um Hook (Gancho)
+                //     beforeValidate: (customer, options) => { // Antes da validação o status será ARCHIVED
+                //         customer.status = "ARCHIVED"
+                //     },
+                // },
                 sequelize, // Passa a conexão do banco de dados
                 name:{
                     singular: "customer",
