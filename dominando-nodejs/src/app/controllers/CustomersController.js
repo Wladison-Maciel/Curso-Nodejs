@@ -147,23 +147,18 @@ class CustomersController {
 
     }
     // Atualização de um Customer
-    update(req, res) {
+    async update(req, res) {
         const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
-        const { name, site } = req.body; // Fazendo a requisição por meio do body em formato JSON
-        const index = customers.findIndex(item => item.id === id); /* Procurando index do Customer que tem o mesmo
-    id passado na URL
-    */
-        const status = index >= 0 ? 200 : 404; // status recebe um Boolean se index for maior ou igual a 0
-
-        if (index >= 0) {
-            customers[index] = { id: parseInt(id, 10), name, site }; /* O customer do index selecionado receberá as
-        alterações de "name" e "site"
-        */
-            console.debug("PUT :: /customers/:id", JSON.stringify(customers[index])) /* Adicionando um Debug e tranformando o
+        const { name, email, status } = req.body; // Fazendo a requisição por meio do body em formato JSON
+        const customer = await Customer.findByPk(id);
+        const data = await customer.update({
+            name: name,
+            email: email,
+            status: status
+        });
+        res.status(200).json(data);
+        console.debug("PUT:: /customers/:id", JSON.stringify(data)) /* Adicionando um Debug e tranformando o
         customer em formato JSON */
-        }
-        return res.status(status).json(customers[index]); // Retorna o status code e o customer selecionado
-
     }
     // Deleta um Customer
     async destroy(req, res) {
