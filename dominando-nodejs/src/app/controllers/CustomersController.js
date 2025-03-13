@@ -150,7 +150,13 @@ class CustomersController {
     async update(req, res) {
         const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
         const { name, email, status } = req.body; // Fazendo a requisição por meio do body em formato JSON
-        const customer = await Customer.findByPk(id);
+        const customer = await Customer.findByPk(id); // Procurando customer com o id passado
+        // Verificando se o id existe no Banco de dados
+        if (!customer) {
+            return res.status(404).json({ error: "Cliente não encontrado" }); // Retornando caso não seja encontrado
+        }
+
+        // Atualizando o customer selecionado
         const data = await customer.update({
             name: name,
             email: email,
@@ -165,7 +171,7 @@ class CustomersController {
         const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
         const data = await Customer.findByPk(id); // Buscando id passado na URL
         await data.destroy(); // Deletando customer selecionado
-        res.status(200).json({message: "Customer deletado com sucesso!"}) // Respondendo a requisão se concluida
+        res.status(200).json({ message: "Customer deletado com sucesso!" }) // Respondendo a requisão se concluida
         console.debug("DELETE :: /customers/:id", "Customer deletado com sucesso!"); // Console de debug
     }
 }
