@@ -114,8 +114,20 @@ class CustomersController {
 
     // Listagem de um Customer
     async show(req, res) {
-        const id = parseInt(req.params.id, 10); // Recebendo id passado na URL
-        const data = await Customer.findByPk(id); // Procurando o id correspondente no Banco de Dados
+        const id = parseInt(req.params.id, 10); // Recebendo id passado na URL a transformando em INT
+        const data = await Customer.findOne({
+            include:[
+                {
+                    model: Contact,
+                    attributes: ["id","status"],
+                }
+            ],
+            where: {
+                id:{
+                    [Op.eq]: id
+                },
+            },
+        }); // Procurando o id correspondente no Banco de Dados
         const status = data ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
         console.debug("GET :: /customers/:id", JSON.stringify(data)) /* Adicionando um Debug e tranformando o
         customer em formato JSON */
