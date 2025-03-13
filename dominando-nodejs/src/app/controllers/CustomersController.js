@@ -98,7 +98,7 @@ class CustomersController {
         // Busca os registros no banco de dados com base nos filtros e ordenação
         const data = await Customer.findAll({
             where, // Aplica os filtros
-            order:[["id","ASC"]],
+            order: [["id", "ASC"]],
             include: [
                 {
                     model: Contact, // Faz um relacionamento com a tabela de Contatos
@@ -166,18 +166,12 @@ class CustomersController {
 
     }
     // Deleta um Customer
-    destroy(req, res) {
+    async destroy(req, res) {
         const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
-        const index = customers.findIndex(item => item.id === id); /* Procurando index do Customer que tem o mesmo
-    id passado na URL
-    */
-        const status = index >= 0 ? 200 : 404; // status recebe um Boolean se index for maior ou igual a 0
-        if (index >= 0) {
-            customers.splice(index, 1);
-            console.log("Customer deletado com sucesso")
-        }
-        return res.status(status).json();
-
+        const data = await Customer.findByPk(id); // Buscando id passado na URL
+        await data.destroy(); // Deletando customer selecionado
+        res.status(200).json({message: "Customer deletado com sucesso!"}) // Respondendo a requisão se concluida
+        console.debug("DELETE :: /customers/:id", "Customer deletado com sucesso!"); // Console de debug
     }
 }
 export default new CustomersController();
