@@ -98,13 +98,13 @@ class CustomersController {
         // Busca os registros no banco de dados com base nos filtros e ordenação
         const data = await Customer.findAll({
             where, // Aplica os filtros
+            order:[["id","ASC"]],
             include: [
                 {
                     model: Contact, // Faz um relacionamento com a tabela de Contatos
                     attributes: ["id", "status"], // Seleciona apenas os campos "id" e "status" dos contatos
                 }
             ],
-            order, // Aplica a ordenação definida
             limit, // Define o limite de registros por página
             offset: limit * page - limit, // Calcula o deslocamento para a paginação
         });
