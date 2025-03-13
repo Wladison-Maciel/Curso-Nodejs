@@ -133,7 +133,6 @@ class CustomersController {
         return res.status(status).json(data) // Retorna o status e o customer achado
     }
     // Cria um novo Customer
-    // Resolver problema do create, não está aceitando ACTIVE
     async create(req, res) {
         const { id, name, email, status } = req.body; // Fazendo a requisição por meio do body em formato JSON
         const data = await Customer.create({
