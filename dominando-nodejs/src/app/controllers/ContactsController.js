@@ -116,6 +116,7 @@ class ContactsController {
         const id = parseInt(req.params.id, 10); // Recebendo id passado na URL a transformando em INT
         const customer_id = parseInt(req.params.customerId, 10);
         const data = await Contact.findOne({ // Procurando somente um contact
+            attributes: { exclude: ["customer_id"]},
             include: [ // Adicionando seus Contatos para visualização
                 {
                     model: Customer, // Adicionando Model
@@ -139,6 +140,9 @@ class ContactsController {
         const status = data ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
         return res.status(status).json(data) // Retorna o status e o customer achado
     }
+
+
+
 }
 
 export default new ContactsController();
