@@ -141,7 +141,18 @@ class ContactsController {
         return res.status(status).json(data) // Retorna o status e o customer achado
     }
 
+    async create(req,res){
+        const { id, name, status, email, customer_id } = req.body;
+        const data = await Contact.create({
+            id: id,
+            name: name,
+            status: status.toUpperCase(),
+            email: email,
+            customer_id: customer_id
+        });
 
+        return res.status(201).json(data)
+    }
 
 }
 
