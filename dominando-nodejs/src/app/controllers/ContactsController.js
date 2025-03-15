@@ -123,18 +123,18 @@ class ContactsController {
             ],
             where: { // Fazendo a busca por meio de Operadores
                 customer_id:{
-                    [Op.eq]: customer_id
+                    [Op.eq]: customer_id // Verificando se o id do customer corresponde ao da URL
                 },
                 id: {
-                    [Op.eq]: id // Verificando se o id corresponde ao da URL
+                    [Op.eq]: id // Verificando se o id do contact corresponde ao da URL
                 },
             },
         });
 
+        // Verificando se há resgistros para a determinada busca
         if(!customer_id || !data){
-            return res.status(404).json({ message: "Não há indivíduos para essa busca" })
+            return res.status(404).json({ message: "Não há registros para essa busca" })
         }
-
 
         const status = data ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
         return res.status(status).json(data) // Retorna o status e o customer achado
