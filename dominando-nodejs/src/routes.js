@@ -14,8 +14,8 @@ routes.delete("/customers/:id" , customers.destroy );
 routes.get("/customers/:customerId/contacts" , contacts.index );
 routes.get("/customers/:customerId/contacts/:id" , contacts.show );
 routes.post("/customers/:customerId/contacts" , contacts.create );
-// routes.put("/customers/customerId/contacts/:id" , contacts.update );
-// routes.delete("/customers/customerId/contacts/:id" , contacts.destroy );
+routes.put("/customers/:customerId/contacts/:id" , contacts.update );
+routes.delete("/customers/:customerId/contacts/:id" , contacts.destroy );
 
 // Exporta as rotas para serem usadas em outro arquivo
 export default routes;

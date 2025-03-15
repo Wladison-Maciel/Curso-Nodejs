@@ -21,7 +21,7 @@ class ContactsController {
         const page = req.query.page || 1; // Se não for passado, assume 1
         const limit = req.params.limit || 25; // Se não for passado, assume 25
 
-        let where = {customer_id: req.params.customerId}; // Objeto onde serão armazenadas as condições da consulta
+        let where = { customer_id: req.params.customerId }; // Objeto onde serão armazenadas as condições da consulta
         let order = []; // Array para armazenar critérios de ordenação
 
         // Filtros opcionais
@@ -116,14 +116,14 @@ class ContactsController {
         const id = parseInt(req.params.id, 10); // Recebendo id passado na URL a transformando em INT
         const customer_id = parseInt(req.params.customerId, 10);
         const data = await Contact.findOne({ // Procurando somente um contact
-            attributes: { exclude: ["customer_id"]},
+            attributes: { exclude: ["customer_id"] },
             include: [ // Adicionando seus Contatos para visualização
                 {
                     model: Customer, // Adicionando Model
                 }
             ],
             where: { // Fazendo a busca por meio de Operadores
-                customer_id:{
+                customer_id: {
                     [Op.eq]: customer_id // Verificando se o id do customer corresponde ao da URL
                 },
                 id: {
@@ -133,15 +133,15 @@ class ContactsController {
         });
 
         // Verificando se há resgistros para a determinada busca
-        if(!customer_id || !data){
-            return res.status(404).json({ message: "Não há registros para essa busca" })
+        if (!customer_id || !data) {
+            return res.status(404).json({ error: "Não há registros para essa busca" })
         }
 
         const status = data ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
         return res.status(status).json(data) // Retorna o status e o customer achado
     }
 
-    async create(req,res){
+    async create(req, res) {
         const { id, name, status, email, customer_id } = req.body;
         const data = await Contact.create({
             id: id,
@@ -152,6 +152,33 @@ class ContactsController {
         });
 
         return res.status(201).json(data)
+    }
+
+    async update(req, res) {
+
+    }
+
+    async destroy(req, res) {
+        const id = parseInt(req.params.id, 10); // Recebe o id passado na URL e transforma em INT
+        const customer_id = parseInt(req.params.customerId, 10); // Recebe o id do customer passado na URL e transforma em INT
+        const data = await Contact.findOne({
+            where: { // Fazendo a busca por meio de Operadores
+                customer_id: {
+                    [Op.eq]: customer_id // Verificando se o id do customer corresponde ao da URL
+                },
+                id: {
+                    [Op.eq]: id // Verificando se o id do contact corresponde ao da URL
+                },
+            },
+        });
+
+        // Verificando se há resgistros para a determinada busca
+        if (!customer_id || !data) {
+            return res.status(404).json({ error: "Não há registros para essa busca" })
+        }
+        await data.destroy();
+        res.status(200).json({ message: "Customer deletado com sucesso!" }) // Respondendo a requisão se concluida
+
     }
 
 }
