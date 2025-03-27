@@ -97,6 +97,7 @@ class ContactsController {
 
         // Busca os registros no banco de dados com base nos filtros e ordenação
         const data = await Contact.findAll({
+            attributes: { exclude: ["customer_id"] },
             where, // Aplica os filtros
             order: [["id", "ASC"]],
             include: [
@@ -136,9 +137,7 @@ class ContactsController {
         if (!customer_id || !data) {
             return res.status(404).json({ error: "Não há registros para essa busca" })
         }
-
-        const status = data ? 200 : 404; // Verifica o status code, mantendo os principios de API Rest
-        return res.status(status).json(data) // Retorna o status e o customer achado
+        return res.status(200).json(data) // Retorna o status e o customer achado
     }
 
     async create(req, res) {
@@ -155,7 +154,31 @@ class ContactsController {
     }
 
     async update(req, res) {
+        const id = parseInt(req.params.id, 10);
+        const customer_id = parseInt(req.params.customerId, 10);
+        const { name, email, status } = req.body;
+        const contact = await Contact.findOne({
+            where: {
+                customer_id: {
+                    [Op.eq]: customer_id
+                },
+                id: {
+                    [Op.eq]: id
+                },
+            },
+        });
 
+        if(!customer_id || !id){
+            return res.status(404).json({ error: "Não há registros para essa busca"})
+        }
+
+        const data = await contact.update({
+            name: name,
+            email: email,
+            status: status,
+        });
+
+        res.status(200).json({message: "Contact atualizado com sucesso"})
     }
 
     async destroy(req, res) {
