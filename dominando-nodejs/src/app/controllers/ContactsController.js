@@ -141,7 +141,9 @@ class ContactsController {
     }
 
     async create(req, res) {
+        // Recebendo as variáveis por meio do body
         const { id, name, status, email, customer_id } = req.body;
+        // Criando Contact
         const data = await Contact.create({
             id: id,
             name: name,
@@ -149,35 +151,36 @@ class ContactsController {
             email: email,
             customer_id: customer_id
         });
-
-        return res.status(201).json(data)
+        // Mandando uma resposta da requisição
+        return res.status(201).json({ message: "Contact criado com sucesso"})
     }
 
     async update(req, res) {
-        const id = parseInt(req.params.id, 10);
-        const customer_id = parseInt(req.params.customerId, 10);
-        const { name, email, status } = req.body;
+        const id = parseInt(req.params.id, 10); // Recebendo id passado na URL a transformando em INT
+        const customer_id = parseInt(req.params.customerId, 10); // Recebendo customer_id na URL e ´´´´´´
+        const { name, email, status } = req.body; // Recebendo variáveis por meio do body
+        // Fazendo a busca do Contact
         const contact = await Contact.findOne({
             where: {
                 customer_id: {
-                    [Op.eq]: customer_id
+                    [Op.eq]: customer_id // Verificando customer_id passado
                 },
                 id: {
-                    [Op.eq]: id
+                    [Op.eq]: id //  Verificando id passado
                 },
             },
         });
-
+        // Verificando se o customer_id ou id(Contact) são válidos
         if(!customer_id || !id){
             return res.status(404).json({ error: "Não há registros para essa busca"})
         }
-
+        // Fazendo Update do Contact
         const data = await contact.update({
             name: name,
             email: email,
             status: status,
         });
-
+        // Mandando uma resposta da requisição
         res.status(200).json({message: "Contact atualizado com sucesso"})
     }
 
