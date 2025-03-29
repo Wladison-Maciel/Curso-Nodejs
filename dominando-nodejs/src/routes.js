@@ -1,6 +1,7 @@
 import { Router } from "express"; // Importa apenas a funcionalidade "Router" do Express
 import customers from "./app/controllers/CustomersController";
 import contacts from "./app/controllers/ContactsController";
+import users from "./app/controllers/UsersController"
 const routes = new Router(); // Cria uma instância do Router para definir rotas da aplicação
 
 // Rotas dos Customers
@@ -16,6 +17,13 @@ routes.get("/customers/:customerId/contacts/:id" , contacts.show );
 routes.post("/customers/:customerId/contacts" , contacts.create );
 routes.put("/customers/:customerId/contacts/:id" , contacts.update );
 routes.delete("/customers/:customerId/contacts/:id" , contacts.destroy );
+
+// Rotas dos Users
+routes.get("/users" , users.index );
+routes.get("/users/:id" , users.show );
+routes.post("/users" , users.create );
+routes.put("/users/:id" , users.update );
+routes.delete("/users/:id" , users.destroy );
 
 // Exporta as rotas para serem usadas em outro arquivo
 export default routes;
